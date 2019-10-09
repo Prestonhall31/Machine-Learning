@@ -11,8 +11,13 @@
 import sys
 from time import time
 import matplotlib as plt
+<<<<<<< HEAD
 sys.path.append("/Users/preston/Projects/DAND-MachineLearning/MachineLearningProjects/tools")
 sys.path.append("/Users/preston/Projects/DAND-MachineLearning/MachineLearningProjects/choose_your_own")
+=======
+sys.path.append("/Users/preston/Projects/DAND-MachineLearning/ud120-projects/tools")
+sys.path.append("/Users/preston/Projects/DAND-MachineLearning/ud120-projects/choose_your_own")
+>>>>>>> 2a2c4ef95cd988759f41cd9f5eca5dc990424e84
 from email_preprocess import preprocess
 from class_vis import prettyPicture
 from sklearn.svm import SVC
