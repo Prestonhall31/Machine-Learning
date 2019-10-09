@@ -9,22 +9,15 @@ Preston Hall
 
 This repo hold my machine learning projects that I have completed or currently working on through Udacity's Data Analysis Nanodegree program. 
 
-Machine learning algorithms 
+## Machine learning algorithms 
 
-<<<<<<< HEAD
 ### Naive Bayes
 > A family of simple ["probabilistic classifiers"](https://en.wikipedia.org/wiki/Probabilistic_classification) based on applying Bayes theorem with strong independence assumptions between features. 
 
 ###### Importing Naive Bayes from Scikit
+
  ```python
 from sklearn.naive_bayes import GaussianNB
-=======
- ### Naive Bayes
- > A family of simple ["probabilistic classifiers"](https://en.wikipedia.org/wiki/Probabilistic_classification) based on applying Bayes theorem with strong independence assumptions between features. 
- ###### Example code
- ```python
- from sklearn.naive_bayes import GaussianNB
->>>>>>> 2a2c4ef95cd988759f41cd9f5eca5dc990424e84
 
 clf = GaussianNB() 
 clf.fit(features_train, labels_train)    
@@ -32,13 +25,13 @@ pred = clf.predict(features_test)
 accuracy = clf.score(features_test, labels_test)
 
  ```
-<<<<<<< HEAD
 
  ### Support Vector Machines (SVM)
 
  > Support-vector machines (SVMs, also support-vector networks) are [supervised learning](https://en.wikipedia.org/wiki/Supervised_learning) models with associated learning algorithms that analyze data used for classification and regression analysis. 
 
  ###### Importing SVC from Scikit
+ 
 ```python
 from sklearn.svm import SVC
 
@@ -47,5 +40,3 @@ clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 accuracy = clf.score(features_test, labels_test)
 ```
-=======
->>>>>>> 2a2c4ef95cd988759f41cd9f5eca5dc990424e84
