@@ -10,7 +10,10 @@
     
 import sys
 from time import time
-sys.path.append("../tools/")
+from sklearn import tree
+
+sys.path.append("../tools")
+
 from email_preprocess import preprocess
 
 
@@ -25,7 +28,17 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 
+# To get the number of features in the data
+print(len(features_train[0]))
 
+# The DecisionTreeClassifier can take the min_samples_split parameter. 
+# This sets the max amount of nodes for each branch of the tree, default is 1.
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf = clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
+accuracy = clf.score(features_test, labels_test)
+
+print("Accuracy: ", accuracy)
 #########################################################
 
 

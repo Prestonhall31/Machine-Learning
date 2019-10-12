@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
+import sys
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from sklearn import ensemble
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
@@ -27,15 +29,16 @@ plt.ylabel("grade")
 plt.show()
 ################################################################################
 
+try:
+    clf = ensemble.RandomForestClassifier()
+    clf = clf.fit(features_train, labels_train)
+except:
+    print("Error: did not create classifier")
 
-### your code here!  name your classifier object clf if you want the 
-### visualization code (prettyPicture) to show you the decision boundary
+pred = clf.predict(features_test)
+accuracy = clf.score(features_test, labels_test)
 
-
-
-
-
-
+print(accuracy)
 
 
 try:
