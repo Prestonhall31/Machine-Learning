@@ -99,3 +99,76 @@ The script ran very quick and smooth. Using the prettyPicture() output the follo
 
 ---
 
+## Exploring Enron Corpus Dataset
+
+Types of data you can encounter when using ML
+- Numerical: Numerical values (numbers)
+- Categorical: Limited number of discrete values (category)
+- Time Series: Temporal Value (Date, Timestamp)
+- Text: Words (can be converted to numbers)
+
+---
+
+### LinearRegression
+
+In statistics, linear regression is a linear approach to modeling the relationship between a scalar response (or dependent variable) and one or more explanatory variables (or independent variables). The case of one explanatory variable is called simple linear regression. For more than one explanatory variable, the process is called multiple linear regression.
+
+
+```python
+from sklearn.linear_model import LinearRegression
+### reg = Regression
+reg = LinearRegression()
+reg.fit(X, y) 
+reg.score(X, y) # returns the R-squared score. Compare R-squared test to R-squared training data.
+reg.predict([]) # Takes a list of at least one item and predicts the outcome. 
+reg.intercept_ # returns the y-intercept
+reg.coef_ # returns the slope
+
+
+```
+
+R-squared: A statistical measure that represents the proportion of the variance for a dependent variable that's explained by an independent variable or variables in a regression model. 
+
+##### Linear Regression Errors
+The actual value vs the predicted value. 
+
+- ###### Sum of Squares Error
+Minimizing the sum of squares error (SSE)
+Ordinary Least Squares (OLS) - What SKlearn uses
+Gradient Descent - (not used in this class)
+
+* There can be mulitple lines that minimize $\sum|error|$, but only one line will minimize $\sum|error^2|$. This is why we use the squared sum. 
+Using SSE makes the implementation much easier as well. 
+
+Problems with SSE: Typically Large SSE equal a worse fit. But great data points, which is usually better, will increase the SSE. Makes it hard to compare two different sets of data. 
+
+- ###### $ r^2 $ ("r squared") of a regression
+Does not have the same shortcoming as SSE. 
+
+Returns a value  $ 0.0 < r^2 < 1.0 $ where 0.0 is not really capturing the data well.
+
+Independant from the number of training points. 
+
+> Note that R2 is only bounded from below by 0 when evaluating a linear regression on its training set. If evaluated on a significantly different set, where the predictions of a regressor are worse than simply guessing the mean value for the whole set, the calculation of R2 can be negative.
+
+View the graph with Matplotlib
+```python
+
+plt.scatter(x_value, y_value)
+plt.plot(x_value, reg.predict(x_value), color='blue', linewidth=3)
+plt.xlabel("Title")
+plt.ylabel("Other Title")
+plt.show()
+```
+
+##### Classification vs Regression
+
+| Property | Supervised Classification | Regression|
+|---|---|---|
+| Output Type | Discreet (class labels) | continuous (number) | 
+| What are you trying to find? | decision (boundary) |  "best fit" line |
+| Evaluation | accuracy | SSE or $ r^2 $ (r squared) |
+
+##### Multivariate Regressions
+
+A method used to measure the degree at which more than one independent variable (predictors) and more than one dependent variable (responses), are linearly related.
