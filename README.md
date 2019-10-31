@@ -172,3 +172,19 @@ plt.show()
 ##### Multivariate Regressions
 
 A method used to measure the degree at which more than one independent variable (predictors) and more than one dependent variable (responses), are linearly related.
+
+
+# Unsupervisoed Machine Learning
+
+
+k-means: k-means clustering is a method of vector quantization, originally from signal processing, that is popular for cluster analysis in data mining. Works in 2 stpes
+1. Assign
+2. Optimize
+3. Repeat
+
+[Visual Aid](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/)
+
+[Sklearn KMeans Documentation](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans)
+
+
+
