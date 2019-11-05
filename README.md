@@ -188,3 +188,8 @@ k-means: k-means clustering is a method of vector quantization, originally from 
 
 
 
+
+
+### Feature Scaling
+
+$ x^1 = \frac{x - x_{min}}{x_{max} - x_{min}} $

@@ -66,13 +66,13 @@ plt.show()
 ### for the data and store them to a list called pred
 
 from sklearn.cluster import KMeans
-features_list = ["poi", feature_1, feature_2]
-data2 = featureFormat(data_dict, features_list )
-poi, finance_features = targetFeatureSplit( data2 )
-clf = KMeans(n_clusters=2)
+
+clf = KMeans(n_clusters=3)
+
 pred = clf.fit_predict( finance_features )
 Draw(pred, finance_features, poi, name="clusters_before_scaling.pdf", f1_name=feature_1, f2_name=feature_2)
 
+print(clf.labels_)
 ### rename the "name" parameter when you change the number of features
 ### so that the figure gets saved to a different file
 try:
