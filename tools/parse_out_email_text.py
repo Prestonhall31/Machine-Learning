@@ -25,18 +25,26 @@ def parseOutText(f):
     words = ""
     if len(content) > 1:
         ### remove punctuation
-        text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
+        text_string = content[1].translate(string.punctuation) # string.maketrans("", "") is deprecated in Python3, unneeded
 
         ### project part 2: comment out the line below
-        words = text_string
+        # words = text_string
 
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
         ### space between each stemmed word)
+        from nltk.stem.snowball import SnowballStemmer
+        from nltk.corpus import stopwords
+
+        stemmer = SnowballStemmer("english")
+
+        split_text = text_string.split(" ")
         
+        for word in split_text:
+            sw = stemmer.stem(word)
+            sw = stopwords.words("english")
 
-
-
+        print(sw)
 
     return words
 
@@ -45,7 +53,7 @@ def parseOutText(f):
 def main():
     ff = open("../text_learning/test_email.txt", "r")
     text = parseOutText(ff)
-    print text
+    print(text)
 
 
 

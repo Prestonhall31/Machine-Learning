@@ -33,12 +33,13 @@ with open("final_project_dataset.pkl", "rb") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Task 2: Remove outliers
+
 data_dict.pop('TOTAL', 0) # Contains column total data
 data_dict.pop('THE TRAVEL AGENCY IN THE PARK', 0) # not an individual
-data_dict.pop('LOCKHART EUGENE E', 0) # record contains no information
-data_dict.pop('HUMPHREY GENE E', 0) # 'to_poi_rate' outlier
-data_dict.pop('LAVORATO JOHN J', 0) # 'from_poi_to_this_person' / 'total_payments' outlier
-data_dict.pop('FREVERT MARK A', 0) # 'total_payments' outlier
+# data_dict.pop('LOCKHART EUGENE E', 0) # record contains no information
+# data_dict.pop('HUMPHREY GENE E', 0) # 'to_poi_rate' outlier
+# data_dict.pop('LAVORATO JOHN J', 0) # 'from_poi_to_this_person' / 'total_payments' outlier
+# data_dict.pop('FREVERT MARK A', 0) # 'total_payments' outlier
 
 ### Task 3: Create new feature(s)
 my_dataset = {}
