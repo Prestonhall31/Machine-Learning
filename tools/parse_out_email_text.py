@@ -25,7 +25,8 @@ def parseOutText(f):
     words = ""
     if len(content) > 1:
         ### remove punctuation
-        text_string = content[1].translate(string.punctuation) # string.maketrans("", "") is deprecated in Python3, unneeded
+
+        text_string = content[1].translate(str.maketrans("", "", string.punctuation))
 
         ### project part 2: comment out the line below
         # words = text_string
@@ -34,19 +35,38 @@ def parseOutText(f):
         ### and append the stemmed word to words (make sure there's a single
         ### space between each stemmed word)
         from nltk.stem.snowball import SnowballStemmer
-        from nltk.corpus import stopwords
+        stemmer = SnowballStemmer("english", ignore_stopwords=True)
 
-        stemmer = SnowballStemmer("english")
+        new_sentance = []
 
-        split_text = text_string.split(" ")
-        
-        for word in split_text:
-            sw = stemmer.stem(word)
-            sw = stopwords.words("english")
+        for word in text_string.split():
+            new_sentance.append(stemmer.stem(word))
 
-        print(sw)
+        words = " ".join(new_sentance)
+
+
+
+
 
     return words
+
+    
+    #    from nltk.stem.snowball import SnowballStemmer
+    #     from nltk.corpus import stopwords
+
+    #     stemmer = SnowballStemmer("english")
+
+    #     split_text = text_string.split(" ")
+        
+    #     sw = stopwords.words("english")
+    #     new_sentance = []
+
+
+        
+    #     print(" ".join(new_sentance))
+    #     print(split_text)
+
+    # return words
 
     
 
