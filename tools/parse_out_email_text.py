@@ -45,28 +45,7 @@ def parseOutText(f):
         words = " ".join(new_sentance)
 
 
-
-
-
     return words
-
-    
-    #    from nltk.stem.snowball import SnowballStemmer
-    #     from nltk.corpus import stopwords
-
-    #     stemmer = SnowballStemmer("english")
-
-    #     split_text = text_string.split(" ")
-        
-    #     sw = stopwords.words("english")
-    #     new_sentance = []
-
-
-        
-    #     print(" ".join(new_sentance))
-    #     print(split_text)
-
-    # return words
 
     
 

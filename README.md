@@ -62,6 +62,16 @@ clf = tree.DecisionTreeClassifier(min_sample_split=2)
 clf = clf.fit(X, Y)
 pred = clf.predict(x)
 accuracy = clf.score(x, y)
+
+
+dot_data = tree.export_graphviz(clf, out_file=None, 
+                     feature_names=iris.feature_names,  
+                     class_names=iris.target_names,  
+                     filled=True, rounded=True,  
+                     special_characters=True)  
+graph = graphviz.Source(dot_data)  
+graph 
+
 ```
 
 ---
@@ -295,4 +305,210 @@ regression.fit(features, labels)
 regression.predict([2,4])
 print(regression.coeff_)  # any 0.0 values means it will not use that feature
 ```
+
+#### PCA: Principle Component Analysis
+
+ 
+
+[PCA](https://en.wikipedia.org/wiki/Principal_component_analysis) is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables (entities each of which takes on various numerical values) into a set of values of linearly uncorrelated variables called principal components. This transformation is defined in such a way that the first principal component has the largest possible variance (that is, accounts for as much of the variability in the data as possible), and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components. The resulting vectors (each being a linear combination of the variables and containing n observations) are an uncorrelated orthogonal basis set. PCA is sensitive to the relative scaling of the original variables.
+
+ 
+
+![PCA](https://en.wikipedia.org/wiki/Principal_component_analysis#/media/File:GaussianScatterPCA.svg)
+
+
+When implementing PCA, it seems like it creates a regression line but it is actually turing 2D data graph into 1 dimensional. 
+
+variance - technical term in statistics, roughly the spread of data distribution(similar to the standard deviation)
+
+Using PCA to determine the maximum variance
+
+```python
+def doPCA:
+    from sklearn.decomposition import PCA
+    pca = PCA(n_components=2)
+    pca.fit(data)
+    return pca
+
+pca = doPCA()
+print(pca.explained_variance_ratio_)
+first_pc = pca.components_[0]
+second_pc = pca.components_[1]
+
+transformed_data = pca.transform(data)
+for ii, jj in zip(transformed_data, data):
+    plt.scatter( first_pc[0]*ii[0], first_pc[1]*ii[0],color='r' )
+    plt.scatter( second_pc[0]*ii[1], first_pc[1]*ii[1],color='c' )
+    plt.scatter( jj[0], jj[1], color='b' )
+
+```
+
+When to use PCA
+- latent features driving the patterns in the data
+- dimensional reduction 
+    - visual high-dimensional data
+    - reduce noise
+    - make other algorithms (regression, classification)
+        work better b/c fewer inputs
+
+
+
+### Splitting your data between training and testing data
+
+
+```python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.33, random_state=42)
+```
+This code will split the data into 4 sections, training and testing data for features(X), and training and testing data for labels(Y)
+
+Where to use training vs. testing data 
+
+train/test split  ->  PCA  ->  SVM
+
+pca.fit(training_features)
+pca.transform(training_features)
+svc.train(training_features)
+_______________________________
+pca.transform(test_features)
+svc.predict(test_features)
+
+
+K-fold Cross validation
+Cross-validation is a resampling procedure used to evaluate machine learning models on a limited data sample. The procedure has a single parameter called k that refers to the number of groups that a given data sample is to be split into.
+
+```python
+from sklearn.model_selection import KFold
+
+kf = KFold(n_splits=2)
+
+for train_index, test_index in kf.split(X):
+   print("TRAIN:", train_index, "TEST:", test_index)
+   X_train, X_test = X[train_index], X[test_index]
+   y_train, y_test = y[train_index], y[test_index]
+
+```
+
+
+### Grid Search
+
+GridSearchCV is a way of systematically working through multiple combinations of parameter tunes, cross-validating as it goes to determine which tune gives the best performance. The beauty is that it can work through many combinations in only a couple extra lines of code.
+
+Here's an example from the sklearn documentation:
+
+```parameters = {'kernel':('linear', 'rbf'), 'C':[1, 10]}```
+```svr = svm.SVC()```
+```clf = grid_search.GridSearchCV(svr, parameters)```
+```clf.fit(iris.data, iris.target)```
+
+Let's break this down line by line.
+
+```parameters = {'kernel':('linear', 'rbf'), 'C':[1, 10]}```
+A dictionary of the parameters, and the possible values they may take. In this case, they're playing around with the kernel (possible choices are 'linear' and 'rbf'), and C (possible choices are 1 and 10).
+
+Then a 'grid' of all the following combinations of values for (kernel, C) are automatically generated:
+
+```('rbf', 1)	('rbf', 10)```
+```('linear', 1)	('linear', 10)```
+
+Each is used to train an SVM, and the performance is then assessed using cross-validation.
+
+```svr = svm.SVC()```
+
+This looks kind of like creating a classifier, just like we've been doing since the first lesson. But note that the "clf" isn't made until the next line--this is just saying what kind of algorithm to use. Another way to think about this is that the "classifier" isn't just the algorithm in this case, it's algorithm plus parameter values. Note that there's no monkeying around with the kernel or C; all that is handled in the next line.
+
+```clf = grid_search.GridSearchCV(svr, parameters)```
+This is where the first bit of magic happens; the classifier is being created. We pass the algorithm (svr) and the dictionary of parameters to try (parameters) and it generates a grid of parameter combinations to try.
+
+```clf.fit(iris.data, iris.target)```
+And the second bit of magic. The fit function now tries all the parameter combinations, and returns a fitted classifier that's automatically tuned to the optimal parameter combination. You can now access the parameter values via clf.best_params_.
+
+
+### Confusion matrix
+
+A confusion matrix is a table that is often used to describe the performance of a classification model (or “classifier”) on a set of test data for which the true values are known. It allows the visualization of the performance of an algorithm.
+
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+
+Recall: True Positive / (True Positive + False Negative). Out of all the items that are truly positive, how many were correctly classified as positive. Or simply, how many positive items were 'recalled' from the dataset.
+
+Precision: True Positive / (True Positive + False Positive). Out of all the items labeled as positive, how many truly belong to the positive class.
+
+
+### Maching learning steps
+
+#### Dataset/Questions
+1. Do I have enough data?
+2. Can I define a question?
+3. enough/right features to answer questions?
+
+#### Features
+1. Exploration
+a. Inspect for corrections
+b. outlier removal 
+c. imputation 
+d. cleaning
+2. Creation
+a. Think about it like a human
+3. Representation
+a. Text vectorization
+b. discretization
+4. Scaling
+a. mean subtraction
+b. minmax scaler
+c. standard scaler
+5. Selection
+a. K-Best
+b. Percentile
+c. Recursive Feature elimination
+6. Transforms
+a. PCA
+b. ICA
+
+#### Algorithms
+Pick an algorithm
+Labeled data? (Yes - Supervised, No - Unsupervised)
+1. Unsupervised
+a. K-means clustering
+b. Special clustering
+c. PCA
+d. Mixture modles / EM algorithm
+e. Outlier detection
+2. Supervised
+a. Ordered or continuous output
+a1. Linear Regression
+a2. Lasso Regression
+a3. Decision Tree Regression
+a4. SV regression
+b. Non-ordered or discrete ouput
+b1. Decision Tree
+b2. Naive Bayes
+b3. SVM
+b4. Ensembles
+b5. K nearest neighbors
+b6. LDA
+b7. Logistic Regression
+3. Tune your algorithm
+a. parameters of the algorithm
+b. Visual inspection
+c. Performance on test data
+d. GridSearchCV
+
+#### Evaluation
+1. Validate
+a. Train.Test Split
+b. k-fold
+c. visualize
+2. pick-metrics
+a. SSE/r^2
+b. Precision
+c. recall
+d. F1 score
+e. ROC curve
+f. Custom
+g. bias/variance
 

@@ -2,10 +2,13 @@
 
 import sys
 import pickle
+from time import time
 sys.path.append("../tools/")
+
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
+
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
@@ -36,38 +39,27 @@ with open("final_project_dataset.pkl", "rb") as data_file:
 
 data_dict.pop('TOTAL', 0) # Contains column total data
 data_dict.pop('THE TRAVEL AGENCY IN THE PARK', 0) # not an individual
-# data_dict.pop('LOCKHART EUGENE E', 0) # record contains no information
-# data_dict.pop('HUMPHREY GENE E', 0) # 'to_poi_rate' outlier
-# data_dict.pop('LAVORATO JOHN J', 0) # 'from_poi_to_this_person' / 'total_payments' outlier
-# data_dict.pop('FREVERT MARK A', 0) # 'total_payments' outlier
+data_dict.pop('LOCKHART EUGENE E', 0) # record contains no information
 
 ### Task 3: Create new feature(s)
-my_dataset = {}
-for key in data_dict:
-    my_dataset[key] = data_dict[key]
-    try:
-        from_poi_rate = 1. * data_dict[key]['from_poi_to_this_person'] / \
-        data_dict[key]['to_messages']
-    except:
-        from_poi_rate = "NaN"
-    try:
-        to_poi_rate = 1. * data_dict[key]['from_this_person_to_poi'] / \
-        data_dict[key]['from_messages']
-    except:
-        to_poi_rate = "NaN"
-    my_dataset[key]['from_poi_rate'] = from_poi_rate
-    my_dataset[key]['to_poi_rate'] = to_poi_rate
 
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
 
 ### Extract features and labels from dataset for local testing
-#data = featureFormat(my_dataset, features_list, sort_keys = True)
-
-data = featureFormat(my_dataset, features_list, remove_NaN=True, remove_all_zeroes=True, 
-                     remove_any_zeroes=True, sort_keys=True)
+data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
+from sklearn import preprocessing
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import f_classif
+
+
+min_max_scaler = preprocessing.MinMaxScaler()
+fieatures_minmax = min_max_scaler.fit_transform(features)
+
+selector = SelectKBest(score_func=f_classif, k=10)
+features_transformed = selector.fit_transform(fieatures_minmax, labels)
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -75,9 +67,37 @@ labels, features = targetFeatureSplit(data)
 ### you'll need to use Pipelines. For more info:
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
-# Provided to give you a starting point. Try a variety of classifiers.
+# GaussianNB
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+
 clf = GaussianNB()
+clf.fit(features, labels)    
+pred = clf.predict(features)
+acc = accuracy_score(pred, labels)
+
+print("NB Accuracy: ", acc)
+
+
+# Decision Tree
+from sklearn import tree
+
+clf = tree.DecisionTreeClassifier(min_samples_split=40)
+clf = clf.fit(features, labels)
+accuracy = clf.score(features, labels)
+
+print("DT Accuracy: ", accuracy)
+
+
+# Support Vector Machine Classifier
+from sklearn.svm import SVC
+
+clf = SVC(kernel="rbf", C=10000, gamma='scale') 
+clf.fit(features, labels)   
+accuracy = clf.score(features, labels)
+
+print("SVC Accuracy: ", accuracy)
+
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
@@ -90,6 +110,26 @@ clf = GaussianNB()
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.3, random_state=42)
+
+
+from sklearn.model_selection import KFold
+from sklearn import metrics
+
+kf = KFold(n_splits=4, shuffle=True)
+
+for train_index, test_index in kf.split(labels):
+    kfeatures_train= [features[ii] for ii in train_index]
+    kfeatures_test= [features[ii] for ii in test_index]
+    klabels_train=[labels[ii] for ii in train_index]
+    klabels_test=[labels[ii] for ii in test_index]
+
+clf = clf.fit(kfeatures_train, klabels_train)
+pred = clf.predict(kfeatures_test)
+
+print("K-Fold Accuracy = ", accuracy_score(klabels_test, pred))
+print('K-Fold Precision = ', metrics.precision_score(klabels_test, pred))
+print('K-Fold Recall = ', metrics.recall_score(klabels_test, pred))
+
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
