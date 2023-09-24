@@ -1,4 +1,6 @@
-# Conclusion
+# Machine Learning Project
+### Enron Scandal Dataset
+### Data Analysis Nanodegree
 
 ## Project Overview
 The goal of this project was to develop a supervised machine learning algorithm capable of identifying persons of interest (POIs) in the Enron scandal dataset. This dataset contains financial information and email data of former Enron employees. The Enron scandal, characterized by fraudulent activities leading to the company's bankruptcy in 2001, served as a compelling case for machine learning analysis.
